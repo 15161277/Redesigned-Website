@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+	<META NAME="GENERATOR" CONTENT="Mozilla/4.0 [en] (WinNT; I) [Netscape]">
+	<link href="COBOL2.CSS" rel="stylesheet" type="text/css" />
+	<TITLE>Basic Procedure Division commands</TITLE>
+</head>
+
+<body>
+<!-- ============ HEADER SECTION ============== -->
+<header>
+	 <h2><img src="Resources/pics/t-CobolTut.gif" width="173" height="59"></h2>
+</header>
+
+<!-- ============ NAVIGATION BAR SECTION ============== -->
+<div id="mynav" class="nav">
+<ul>
+  <li class="dropdown">
+    <a href="Introduction.html" class="dropbtn">COBOL Command</a>
+    <div class="dropdown-content">
+      <a href="Introduction.html">Introduction</a>
+      <a href="BasicUser.html">Basic User Input and Output</a>
+      <a href="MoveAssignment.html">Assignment using the MOVE verb</a>
+	  <a href="Arithmetic.html">Arithmetic in COBOL</a>
+    </div>
+  </li>
+  <li class="dropdown">
+    <a href="Subprograms-Introduction.htm" class="dropbtn">Sub Program</a>
+    <div class="dropdown-content">
+      <a href="Subprograms-Introduction.htm">Introduction</a>
+      <a href="The-CALL-verb.htm">The CALL verb</a>
+      <a href="Contained-Subprograms.htm">Contained Subprograms</a>
+    </div>
+  </li>
+ </ul>
+</div>
+
+<!-- ============ RIGHT COLUMN (CONTENT) ============== -->
+<div id="myArticle" class="article">
+  <h2>Introduction</h2>
+   <ul>
+   <li>In "strongly typed" languages like Modula-2, Pascal or ADA the assignment operation is simple because assignment is only allowed between data items with compatible types. The simplicity of assignment in these languages, is achieved at the "cost" of having a large number of data types.</li><br>
+    <li>In COBOL there are basically only three data types;</li>
+	<ul>
+     <li>Alphabetic (PIC A)</li>
+     <li>Alphanumeric (PIC X)</li>
+     <li>Numeric (PIC 9)</li>
+    </ul><br>
+	<li>But this simplicity is achieved only at the cost of having a very complex assignment statement.</li><br>
+	<li>In COBOL, assignment is achieved using the MOVE verb.</li>
+   </ul>
+   
+   <h2>The MOVE verb</h2>
+    <P align="left"><u>(MOVE</u> Source$#il <u>TO</u> Destination$#i ...)</P>
+	<ul>
+	 <li>As we can see from the syntax metalanguage above, the MOVE copies data from the source identifier or literal to one or more destination identifiers.</li><br>
+	 <li>Although this sounds simple, the actual operation of the MOVE is somewhat more complicated and is governed by a number of rules</li><br>
+	</ul>
+	<h3>MOVE rules</h3>
+	<ul>
+	 <li>In most other programming languages, data is assigned from the source item on the right to the destination item on the left (e.g. Qty = 10;) but in COBOL the MOVE assigns data from left to right. The source item is on the left of the word TO and the receiving item(s) is on the right.</li><br>
+	 <li>The source and destination identifiers can be group or elementary data-items.</li><br>
+	 
+	 <li>When data is moved into an item, the contents of the item are completely replaced.</li><br>
+
+	 <li>If the number of characters in the source data-item is less than the number in the destination item, the rest of the destination item is filled with zeros or spaces.</li><br>
+
+	 <li>If the source data-item is larger than the destination item, the characters that cannot fit into the destination item will be lost. This is known as truncation.</li><br>
+
+	 <li>When the destination item is alphanumeric or alphabetic (PIC X or A), data is copied into the destination area from left to right with space filling or truncation on the right.</li><br>
+
+	 <li>When the destination item is numeric, or edited numeric, data is aligned along the decimal point with zero filling or truncation as necessary.</li><br>
+
+	 <li>When the decimal point is not explicitly specified in either the source or destination items, the item is treated as if it had an assumed decimal point immediately after its rightmost character.</li><br>
+	</ul>
+   <h3>MOVE combinations</h3>
+   <ul>
+    <li>Although COBOL is much less restrictive in this respect than many other languages, certain combinations of sending and receiving data types are not permitted and will be rejected by the compiler. The valid and invalid MOVE combinations are shown in the diagram below:</li><br>
+   </ul>
+   <p align="center"><img src="Resources/pics/Move2.gif" width="520" height="232"></p>
+
+   <h2>MOVE examples</h2>
+   <ul>
+   <li>Examine the examples in the animation below in combination with the MOVE rules above. Make sure you understand the why the moves produce the results shown.</li><br>
+   </ul>
+    <p align="center"><a href="Resources/ppz/TC-Commands1.htm"><img src="Resources/pics/i-Animation.gif" width="62" height="62" border="0" alt="Click to view the animation"></a></p>
+	
+<!-- ============ FOOTER SECTION ============== -->
+<div id ="myfooter" class="footer">
+ <h3 align="center">Copyright Notice</h3>
+    <P align="center">These COBOL course materials are the copyright property of Michael Coughlan.</P>
+    <P align="left"><FONT size="2">All rights reserved. No part of these course materials may be reproduced in any form or by any means - graphic, electronic, mechanical, photocopying, printing, recording, taping or stored in an information storage and retrieval system                - without the written permission of </FONT><FONT size="2">the author.</FONT></P>
+    <P align="center"><FONT size="2">(c) Michael Coughlan</FONT></P>
+     <hR align="left" width="100%">
+    <DIV align="left"><I><FONT size=-1>Last updated : March 1999</FONT></I> 
+     <BR>
+     <FONT size=-1><A href="mailto:michael.coughlan@ul.ie">e-mail : CSISwebeditor@ul.ie</A></FONT> </DIV>
+    </div>
+</div>
+</body>
+<html>
+
+
+   
+   
+   

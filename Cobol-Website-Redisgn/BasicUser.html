@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+	<META NAME="GENERATOR" CONTENT="Mozilla/4.0 [en] (WinNT; I) [Netscape]">
+	<link href="COBOL2.CSS" rel="stylesheet" type="text/css" />
+	<TITLE>Basic Procedure Division commands</TITLE>
+</head>
+
+<body>
+<!-- ============ HEADER SECTION ============== -->
+<header>
+	 <h2><img src="Resources/pics/t-CobolTut.gif" width="173" height="59"></h2>
+</header>
+
+<!-- ============ NAVIGATION BAR SECTION ============== -->
+<div id="mynav" class="nav">
+<ul>
+  <li class="dropdown">
+    <a href="Introduction.html" class="dropbtn">COBOL Command</a>
+    <div class="dropdown-content">
+      <a href="Introduction.html">Introduction</a>
+      <a href="BasicUser.html">Basic User Input and Output</a>
+      <a href="MoveAssignment.html">Assignment using the MOVE verb</a>
+	  <a href="Arithmetic.html">Arithmetic in COBOL</a>
+    </div>
+  </li>
+  <li class="dropdown">
+    <a href="Subprograms-Introduction.htm" class="dropbtn">Sub Program</a>
+    <div class="dropdown-content">
+      <a href="Subprograms-Introduction.htm">Introduction</a>
+      <a href="The-CALL-verb.htm">The CALL verb</a>
+      <a href="Contained-Subprograms.htm">Contained Subprograms</a>
+    </div>
+  </li>
+ </ul>
+</div>
+
+<!-- ============ RIGHT COLUMN (CONTENT) ============== -->
+<div id="myArticle" class="article">
+<h2 align="center">Introduction</h2>
+ <div align="left"> 
+ <ul>
+	<li align="left"> In COBOL, the ACCEPT and DISPLAY verbs are used to read from the keyboard and write to the screen. Input and output using these commands is somewhat primitive because they were originally designed to be used in a batch programming environment to communicate with the computer operator.</li><br>
+	<li>In recent years many vendors have augmented the ACCEPT and DISPLAY syntax to facilitate the creation of on-line systems by allowing such things as: cursor positioning, character attribute control and auto-validation of input.</li><br>
+	<li>In this tutorial we will examine only the standard ACCEPT and DISPLAY syntax.</li><br>
+</ul>
+	</p>
+<h2 align="center">Display Verb</h2>
+<DIV align="left"> 
+<ul>
+	<li align="left">The DISPLAY verb is used to send output to the computer screen or to a peripheral device.</li><br>
+
+	<li>As you can see from the ellipses (...) in the metalanguage above a single DISPLAY can be used to display several data-items or literals or any combination of these.</li><br>
+
+	<h3>DISPLAY notes</h3> 
+	<li>After the items in the display list have been sent to the screen, the DISPLAY automatically moves the screen cursor to the next line unless a WITH NO ADVANCING clause is present.</li><br>
+
+	<li>Mnemonic-Names are used to make programs more readable. A Mnemonic-Name is a name devised by the programmer to represent some peripheral device (such as a serial port) or control code. The name is connected to the actual device or code by entries in the ENVIRONMENT DIVISION.</li><br>
+
+	<li>When a Mnemonic-Name is used with the DISPLAY it represents an output device (serial port, parallel port etc).</li><br>
+
+	<li>If a Mnemonic-Name is used output is sent to the device specified; otherwise, output is sent to the computer screen.<br></li>
+</ul>
+<ol>
+	<h3>DISPLAY examples</h3>
+	<li>DISPLAY "My name is " ProgrammerName.</li><br>
+	<li>DISPLAY "The vat rate is " VatRate.</li><br> 
+	<li>DISPLAY PrinterSetupCodes UPON PrinterPort1.</li></p>
+</ol>
+
+
+   <P align="ce"><img src="Resources/pics/Display.gif" width="440" height="54"><p> 
+<div class="dropdown">
+  <span><h4 align="center"><img src="Resources/pics/i-LightBulbTip.gif" width="42" height="44"></h4>
+</span>
+  <div class="dropdown-content">
+    <p>In the COBOL syntax diagrams ( the COBOL metalanguage) upper case words are keywords. If underlined, they are mandatory.
+	<br>
+	{ } brackets mean that one of the options must be selected
+	<br>
+	[ ] brackets mean that the item is optional
+	<br>
+	ellipses (...) mean that the item may be repeated at the programmers discretion.<br>
+
+	The symbols used in the syntax diagram identifiers have the following significance:-
+	$ signifies a string item,
+	# is numeric item, 
+	i indicates that the item can be a variable identifier
+	l indicates that the item can be a literal.</p>
+  </div>
+</div>
+
+<h2 align="center">The ACCEPT Verb</h2>
+<div align="left">
+	<P align="left"><img src="Resources/pics/ACCEPT.gif" width="390" height="120"></P>
+	<P align="left">The ACCEPT verb is used to get data from the keyboard, a peripheral device, or certain system variables.</P>
+  <h3>ACCEPT notes</h3>
+   <ul>
+	<li>When the first format is used, the ACCEPT 
+	inserts the data typed at the keyboard (or coming from the peripheral device), into the receiving data-item. </li><br>
+	<li align="left">When the second format is used, the ACCEPT inserts the data obtained from one of the system variables, into 
+    the receiving data-item. </li>
+  <h2>Using the ACCEPT to get the system date and time</h2>
+ <div align="left"> 
+  <li align="left">The second format of the ACCEPT allows the programmer to access the system date and time (i.e.the date and time held in the computer's internal clock). The system variables provided are - </li>
+  </div>
+  <ul>
+    <li> Date </li>
+    <li> Day of the year</li>
+    <li> Day of the week</li>
+    <li>Time</li>
+   </ul><br>
+
+    <li>The declarations and comments below show the format required for data-items receiving each of the system variables.</li>
+
+ <div align="center">
+  <div align="left">
+    <pre>
+    01 CurrentDate         PIC 9(6).
+    * CurrentDate is the date in YYMMDD format
+	
+
+    01 DayOfYear           PIC 9(5).
+    * DayOfYear is current day in YYDDD format
+
+
+    01 Day0fWeek           PIC 9.
+    * DAY-OF-WEEK is a single digit where 1=Monday
+
+	
+    01 CurrentTime         PIC 9(8).
+    * CurrentTime is the time in HHMMSSss format where s = S/100
+    </pre>
+   </div>
+  </div>
+  <h2>New formats for the ACCEPT</h2>
+   <li>The problem with ACCEPT ..FROM DATE and ACCEPT..FROM DAY is that since they hold only the year in only two digits, they are subject to the millennium bug. To resolve this problem, these two formats of now take additional (optional) formatting instructions to allow the programmer to specify that the date is to be supplied with a 4 digit year.</li><br>
+    <li align="left">The syntax for these new formatting instructions is:</li>
+	 <p><u><font size="-1">ACCEPT</font></u> <font size="-1"><u>DATE</u> [YYYYMMDD]<br>
+       <u>ACCEPT</u> <u>DAY</u> [YYYYDDD]</font><br>
+    </p>
+	 <li>When the new formatting instructions are used, the receiving fields must be defined as; 
+	 </li>
+  <div align="left">
+	<pre>
+     01 Y2KDate PIC 9(8).* Y2KDate is the date in YYYYMMDD format
+
+     01 Y2KDayOfYear PIC 9(7).* Y2KDayOfYear is current day in YYYYDDD format 
+	</pre>
+  </div>
+  
+  <h2>ACCEPT and DISPLAY example program</h2>
+	<li>This example program uses the ACCEPT and DISPLAY to get a student record from the user and display some of its fields. It also demonstrates how the ACCEPT can be used to get the system date and time.</li>
+  </ul>	
+	<table align="center" border="1" width="40%" background="Resources\pics\code.gif">
+     <tr> 
+      <td height="333"> 
+      <div align="left"> 
+        <pre>
+	$ SET SOURCEFORMAT"FREE"
+IDENTIFICATION DIVISION.
+PROGRAM-ID.  AcceptAndDisplay.
+AUTHOR.  Michael Coughlan.
+* Uses the ACCEPT and DISPLAY verbs to accept a student record 
+* from the user and display some of the fields.  Also shows how
+* the ACCEPT may be used to get the system date and time.
+
+* The YYYYMMDD in "ACCEPT  CurrentDate FROM DATE YYYYMMDD." 
+* is a format command that ensures that the date contains a 
+* 4 digit year.  If not used, the year supplied by the system
+* will only contain two digits which may cause a problem 
+* in the year 2000.
+
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 StudentDetails.
+   02  StudentId       PIC 9(7).
+   02  StudentName.
+       03 Surname      PIC X(8).
+       03 Initials     PIC XX.
+   02  CourseCode      PIC X(4).
+   02  Gender          PIC X.
+
+* YYMMDD
+01 CurrentDate.
+   02  CurrentYear     PIC 9(4).
+   02  CurrentMonth    PIC 99.
+   02  CurrentDay      PIC 99.
+
+* YYDDD
+01 DayOfYear.
+   02  FILLER          PIC 9(4).
+   02  YearDay         PIC 9(3).
+
+
+* HHMMSSss   s = S/100
+01 CurrentTime.
+   02  CurrentHour     PIC 99.
+   02  CurrentMinute   PIC 99.
+   02  FILLER          PIC 9(4).
+
+
+PROCEDURE DIVISION.
+Begin.
+   DISPLAY "Enter student details using template below".
+   DISPLAY "Enter - ID,Surname,Initials,CourseCode,Gender"
+   DISPLAY "SSSSSSSNNNNNNNNIICCCCG".
+   ACCEPT  StudentDetails.
+   ACCEPT  CurrentDate FROM DATE YYYYMMDD.
+   ACCEPT  DayOfYear FROM DAY YYYYDDD.
+   ACCEPT  CurrentTime FROM TIME.
+   DISPLAY "Name is ", Initials SPACE Surname.
+   DISPLAY "Date is " CurrentDay SPACE CurrentMonth 
+           SPACE CurrentYear.
+   DISPLAY "Today is day " YearDay " of the year".
+   DISPLAY "The time is " CurrentHour ":" CurrentMinute.
+   STOP RUN.
+                 </pre>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <table width="40%" border="1" align="center" cellpadding="5">
+              <tr bgcolor="#E1FFE1"> 
+                <td> 
+                  <p align="center"><b>Results of running <font size="-1">ACCEPT.CBL</font></b></p>
+                  <pre>
+Enter student details using template below
+Enter - ID,Surname,Initials,CourseCode,Gender
+SSSSSSSNNNNNNNNIICCCCG
+9923453Power   NSLM51F
+Name is NS Power
+Date is 01 03 1999
+Today is day 060 of the year
+The time is 14:41
+</pre>
+                </td>
+              </tr>
+            </table>
+          </TD>
+        </TR>
+
+<!-- ============ FOOTER SECTION ============== -->
+<div id ="myfooter" class="footer">
+ <h3 align="center">Copyright Notice</h3>
+    <P align="center">These COBOL course materials are the copyright property of Michael Coughlan.</P>
+    <P align="left"><FONT size="2">All rights reserved. No part of these course materials may be reproduced in any form or by any means - graphic, electronic, mechanical, photocopying, printing, recording, taping or stored in an information storage and retrieval system                - without the written permission of </FONT><FONT size="2">the author.</FONT></P>
+    <P align="center"><FONT size="2">(c) Michael Coughlan</FONT></P>
+     <hR align="left" width="100%">
+    <DIV align="left"><I><FONT size=-1>Last updated : March 1999</FONT></I> 
+     <BR>
+     <FONT size=-1><A href="mailto:michael.coughlan@ul.ie">e-mail : CSISwebeditor@ul.ie</A></FONT> </DIV>
+    </div>
+</div>
+</body>
+<html>

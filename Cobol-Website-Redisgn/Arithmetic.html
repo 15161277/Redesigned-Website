@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+	<META NAME="GENERATOR" CONTENT="Mozilla/4.0 [en] (WinNT; I) [Netscape]">
+	<link href="COBOL2.CSS" rel="stylesheet" type="text/css" />
+	<TITLE>Basic Procedure Division commands</TITLE>
+</head>
+
+<body>
+<!-- ============ HEADER SECTION ============== -->
+<header>
+	 <h2><img src="Resources/pics/t-CobolTut.gif" width="173" height="59"></h2>
+</header>
+
+<!-- ============ NAVIGATION BAR SECTION ============== -->
+<div id="mynav" class="nav">
+<ul>
+  <li class="dropdown">
+    <a href="Introduction.html" class="dropbtn">COBOL Command</a>
+    <div class="dropdown-content">
+      <a href="Introduction.html">Introduction</a>
+      <a href="BasicUser.html">Basic User Input and Output</a>
+      <a href="MoveAssignment.html">Assignment using the MOVE verb</a>
+	  <a href="Arithmetic.html">Arithmetic in COBOL</a>
+    </div>
+  </li>
+  <li class="dropdown">
+    <a href="Subprograms-Introduction.htm" class="dropbtn">Sub Program</a>
+    <div class="dropdown-content">
+      <a href="Subprograms-Introduction.htm">Introduction</a>
+      <a href="The-CALL-verb.htm">The CALL verb</a>
+      <a href="Contained-Subprograms.htm">Contained Subprograms</a>
+    </div>
+  </li>
+ </ul>
+</div>
+
+<!-- ============ RIGHT COLUMN (CONTENT) ============== -->
+<div id="myArticle" class="article">
+ <h2>Introduction</h2>
+  <ul>
+  <li>Most procedural programming languages perform computations by assigning the result of an arithmetic expression or a function to a variable. In COBOL the COMPUTE verb is used to evaluate arithmetic expressions, but there are also specific commands for adding, subtracting, multiplying and dividing.</li><br>
+
+   <h2>Data Movement</h2>
+
+	<li>In a MOVE operation data is moved from a source item on the left to the destination item(s) on the right. Data movement is from left to right. The same direction of data movement can be observed in the COBOL arithmetic verbs.</li><br>
+
+	<li>All the arithmetic verbs, except the COMPUTE, assign the result of the calculation to the rightmost data-items.</li><br>
+
+   <h2>General Rules</h2>
+
+	<li>All the arithmetic verbs move the result of a calculation into a receiving data-item according to the rules for a numeric move; that is, with alignment along the assumed decimal point and with zero-filling or truncation as necessary.</li><br>
+
+	<li>All arithmetic verbs must use numeric literals or numeric data-items (PIC 9) that contain numeric data. There is one exception. Identifiers that appear to the right of the word GIVING may refer to numeric data-items that contain editing symbols.</li><br>
+
+	<li>When the GIVING phrase is used, the data-item following the word GIVING is the receiving field of the calculation but it is not one of the statement operands (does not contribute to the result). The original values of all the items before the word GIVING are left intact.</li><br>
+
+	<li>If the GIVING phrase is not used, the data-item(s) after the word TO, FROM, BY or INTO both contribute to the result and are receiving field for it.</li><br>
+
+	<li>The maximum size of each operand is 18 digits.</li><br>
+
+	<h2>The ROUNDED option</h2>
+	
+	<li>All the arithmetic verbs allow the ROUNDED phrase.</li><br>
+
+	<li>The ROUNDED phrase takes effect when, after decimal point alignment, the result calculated must be truncated on the right hand side. The option adds 1 to the receiving item when the leftmost truncated digit has an absolute value of 5 or greater.</li>
+	</ul>
+    <table width="84%" border="1" bgcolor="#E1FFE1" align="center">
+      <tr> 
+        <td colspan="4"> 
+        <div align="center"><b><font size="-1">ROUNDED</font> examples</b></div>
+        </td>
+       </tr>
+       <tr> 
+         <td> 
+         <div align="center"><b>Receiving Field</b></div>
+         </td>
+         <td> 
+          <div align="center"><b>Actual Result</b></div>
+          </td>
+          <td> 
+           <div align="center"><b>Truncated Result</b></div>
+          </td>
+          <td> 
+           <div align="center"><b>Rounded Result</b></div>
+           </td>
+           </tr>
+           <tr> 
+            <td> 
+              <p><b>PIC 9(3)V9</b></p>
+             </td>
+             <td><b>123.2<font color="#FF0000">5</font></b></td>
+             <td><b>123.2</b></td>
+              <td><b>123.3</b></td>
+            </tr>
+            <tr> 
+             <td><b>PIC 9(3)V9</b></td>
+             <td><b>123.2<font color="#FF0000">47</font></b></td>
+             <td><b>123.2</b></td>
+             <td><b>123.2</b></td>
+            </tr>
+            <tr> 
+             <td><b>PIC 9(3)</b></td>
+             <td><b>123.<font color="#FF0000">25</font></b></td>
+             <td><b>123</b></td>
+             <td><b>123</b></td>
+            </tr>
+        </table>
+		
+	<h2>ON SIZE ERROR</h2>
+	 <ul>
+	  <li>When a computation is performed it is possible for the result to be too large or too small to be contained in the receiving field. When this occurs, there will be truncation of the result. The ON SIZE ERROR phrase detects this condition.</li><br>
+
+	  <h3>ON SIZE ERROR notes</h3>
+	  <li>All the arithmetic verbs allow the ON SIZE ERROR phrase.</li><br>
+
+	  <li>A size error condition exists when, after decimal point alignment, the result is truncated on either the left or the right hand side.</li><br>
+
+	  <li>If an arithmetic statement has a ROUNDED phrase then a size error only occurs if there is truncation on the left-hand side (most significant digits) because if we specify the ROUNDED option we indicate that we know there will be truncation on the right and are specifying rounding to deal with it.</li><br>
+
+	  <li>Division by 0 always causes a SIZE ERROR.</li><br>
+	  </ul>
+
+	 <h3>ON SIZE ERROR examples</h3>
+	  <table width="70%" border="1" bgcolor="#E1FFE1" align="center" cellpadding="5" cellspacing="0">
+                <tr> 
+                  <th width="45%" bgcolor="#FFFFCC"> 
+                    <div align="center"><b><font color="#FF0000">Receiving Field</font></b></div>
+                  </th>
+                  <th width="19%" bgcolor="#FFFFCC"> 
+                    <div align="center"><b><font color="#FF0000">Actual Result</font></b></div>
+                  </th>
+                  <th width="22%" bgcolor="#FFFFCC"> 
+                    <div align="center"><b><font color="#FF0000">Truncated Result</font></b></div>
+                  </th>
+                  <th width="14%" bgcolor="#FFFFCC"> 
+                    <div align="center"><b><font color="#FF0000">Size Error?</font></b></div>
+                  </th>
+                </tr>
+                <tr> 
+                  <td width="45%"> <b> PIC 9(3)V9</b> </td>
+                  <td width="19%"><b>&nbsp;&nbsp;245.9<font color="#FF0000">6</font></b></td>
+                  <td width="22%"> 
+                    <div align="left"><b>&nbsp;&nbsp;&nbsp;245.9</b></div>
+                  </td>
+                  <td width="14%"> 
+                    <div align="center"><b><font size="-1"><font color="#000000">YES</font></font></b></div>
+                  </td>
+                </tr>
+                <tr> 
+                  <td width="45%"><b>PIC 9(3)V9</b></td>
+                  <td width="19%"> 
+                    <div align="left"><b>&nbsp;&nbsp;<font color="#FF0000">3</font>245.9</b></div>
+                  </td>
+                  <td width="22%"> 
+                    <div align="left"><b>&nbsp;&nbsp;&nbsp;245.9</b></div>
+                  </td>
+                  <td width="14%"> 
+                    <div align="center"><b><font size="-1">YES</font></b></div>
+                  </td>
+                </tr>
+                <tr> 
+                  <td width="45%"><b>PIC 9(3)</b></td>
+                  <td width="19%"> 
+                    <div align="left"><b>&nbsp;&nbsp;324</b></div>
+                  </td>
+                  <td width="22%"> 
+                    <div align="left"><b>&nbsp;&nbsp;&nbsp;324</b></div>
+                  </td>
+                  <td width="14%"> 
+                    <div align="center"><b><font size="-1">NO</font></b></div>
+                  </td>
+                </tr>
+                <tr> 
+                  <td width="45%"><b>PIC 9(3)</b></td>
+                  <td width="19%"> 
+                    <div align="left"><b>&nbsp;<font color="#FF0000">&nbsp;5</font>324</b></div>
+                  </td>
+                  <td width="22%"> 
+                    <div align="left"><b>&nbsp;&nbsp;&nbsp;324</b></div>
+                  </td>
+                  <td width="14%"> 
+                    <div align="center"><b><font size="-1">YES</font></b></div>
+                  </td>
+                </tr>
+                <tr> 
+                  <td width="45%" valign="top"><b>PIC 9(3)V9 not Rounded</b></td>
+                  <td width="19%"> 
+                    <div align="left"><b>&nbsp;&nbsp;523.3<font color="#FF0000">5</font></b></div>
+                  </td>
+                  <td width="22%"> 
+                    <div align="left"><b>&nbsp;&nbsp;&nbsp;523.3</b></div>
+                  </td>
+                  <td width="14%"> 
+                    <div align="center"><b><font size="-1">YES</font></b></div>
+                  </td>
+                </tr>
+                <tr> 
+                  <td width="45%"><b>PIC 9(3)V9 Rounded</b></td>
+                  <td width="19%"><b>&nbsp;&nbsp;523.3<font color="#FF0000">5</font></b></td>
+                  <td width="22%"><b>&nbsp;&nbsp;&nbsp;523.4</b></td>
+                  <td width="14%"> 
+                    <div align="center"><b><font size="-1">NO</font></b></div>
+                  </td>
+                </tr>
+                <tr> 
+                  <td width="45%"><b>PIC 9(3)V9 Rounded</b></td>
+                  <td width="19%"> 
+                    <div align="left"><b><font color="#FF0000">&nbsp;&nbsp;3</font>523.3<font color="#FF0000">5</font></b></div>
+                  </td>
+                  <td width="22%"> 
+                    <div align="left"><b>&nbsp;&nbsp;&nbsp;523.4</b></div>
+                  </td>
+                  <td width="14%"> 
+                    <div align="center"><b><font size="-1">YES</font></b></div>
+                  </td>
+                </tr>
+              </table>
+		
+	<h2>ADD verb</h2>
+	<ul>
+	 <p><img src="Resources/pics/Add.gif" width="499" height="74"></p></li>
+	   <li>If the GIVING phrase is used, everything before the word GIVING is added together and the combined result is moved into each of the Result#i items.</li><br>
+
+	   <li>If the GIVING phrase is not used, everything before the word TO is added together and the combined result is then added to each of the ValueResult#i items in turn</li></ul>
+	<h2>SUBTRACT verb</h2>
+	 <ul>
+	 <p align="left"><img src="Resources/pics/Sub.gif" width="481" height="96"></p>
+	   <li>If the GIVING phrase is used, everything before the word FROM is added together and the combined result is subtracted from the Value#il item after the word FROM and the result is moved into each of the Result#i items.</li><br>
+
+	   <li>f the GIVING phrase is not used everything before the word FROM is added together and the combined result is then subtracted from each of the ValueResult#i items after the word FROM in turn.</li><br></ul>
+	 
+	<h2>MULTIPLY</h2>
+    <ul>
+	 <p><img src="Resources/pics/Mult.gif" width="498" height="72"></p>
+	   <li>If the GIVING phrase is used, then the item to the left of the word BY is multiplied by the Value#i item to the right of the word BY and the result is moved into each of the Result#i items.</li><br>
+
+	   <li>If the GIVING phrase is not used, then the Value#il to the left of the word BY is multiplied by each of the ValueResult#i items. The result of each calculation is placed in the ValueResult#i involved in the calculation.</li></ul>
+	<h2>DIVIDE verb</h2>
+	 <ul>
+	  <li>The Divide has two main formats. One produces a remainder and the other does not.</li><br>
+	<h3>Format 1</h3>
+	  <p><img src="Resources/pics/Div1.gif" width="525" height="101"></p>
+	  <li>In the GIVING phrase is used, the Value#il to the left of BY or INTO is divided by or into the Value#il to the right of BY or INTO and the result of the calculation in moved into each of the Result#i items in turn.</li><br>
+
+	  <li>If the GIVING phrase is not used, the item to the left of the word INTO is divided into each of the ValueResult#i items in turn. The result of each calculation is placed in the ValueResult#i involved in the calculation.</li>
+	<h3>Format 2</h3>
+	 <p><img src="Resources/pics/Div2.gif" width="462" height="128"></p>
+	  <li>In this format the Val#il to the left of BY or INTO is divided by or into the Val#il to the right of BY or INTO. The quotient part of the computation is assigned to Quot#i and the remainder is assigned to Rem#i.</li>
+	  </ul>
+	 <h2>COMPUTE verb</h2>
+	   <p><img src="Resources/pics/Compute.gif" width="509" height="77"></p>
+	    <ul>
+		 <li>The COMPUTE assigns the result of an arithmetic expression to a data-item. The arithmetic expression is evaluated according to the normal arithmetic rules. That is, the expression is normally evaluated from left to right but bracketing and the precedence rules shown below can change the order of evaluation.</li>
+		 
+		 <TABLE BORDER CELLSPACING=1 CELLPADDING=7 WIDTH=259 align="center" bgcolor="#E1FFE1">
+              <TR> 
+                <TD WIDTH="32%" VALIGN="TOP" bgcolor="#FFFFCC"> 
+                  <P ALIGN="center">Precedence 
+                </TD>
+                <TD WIDTH="29%" VALIGN="TOP" bgcolor="#FFFFCC"> 
+                  <P ALIGN="center">Symbol 
+                </TD>
+                <TD WIDTH="39%" VALIGN="TOP" bgcolor="#FFFFCC"> 
+                  <P ALIGN="center">Meaning 
+                </TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="32%" VALIGN="TOP"> 
+                  <P ALIGN="center">1. 
+                </TD>
+                <TD WIDTH="29%" VALIGN="TOP"> 
+                  <P ALIGN="center"><b>**</b> 
+                </TD>
+                <TD WIDTH="39%" VALIGN="TOP"> 
+                  <P align="center">Power 
+                </TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="32%" VALIGN="TOP" rowspan="2"> 
+                  <P ALIGN="center">2. 
+                  <div align="center"></div>
+                </TD>
+                <TD WIDTH="29%" VALIGN="TOP"> 
+                  <P ALIGN="center"><b>*</b> 
+                </TD>
+                <TD WIDTH="39%" VALIGN="TOP"> 
+                  <P align="center">multiply 
+                </TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="29%" VALIGN="TOP"> 
+                  <P ALIGN="center"><b>/</b> 
+                </TD>
+                <TD WIDTH="39%" VALIGN="TOP"> 
+                  <P align="center">divide 
+                </TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="32%" VALIGN="TOP" rowspan="2"> 
+                  <P ALIGN="center">3. 
+                  <div align="center"></div>
+                </TD>
+                <TD WIDTH="29%" VALIGN="TOP"> 
+                  <P ALIGN="center"><b>+</b> 
+                </TD>
+                <TD WIDTH="39%" VALIGN="TOP"> 
+                  <P align="center">add 
+                </TD>
+              </TR>
+              <TR> 
+                <TD WIDTH="29%" VALIGN="TOP"> 
+                  <P ALIGN="center"><b>-</b> 
+                </TD>
+                <TD WIDTH="39%" VALIGN="TOP"> 
+                  <P align="center">subtract 
+                </TD>
+              </TR>
+            </TABLE>
+			
+		<li>Note that unlike some other programming languages COBOL provides the ** expression symbol to represent raising to a power.</li></ul>
+		
+	<h2>Arithmetic examples</h2>
+	 <ul>
+	  <li>The animation below contains examples of each of the arithmetic verbs. The arithmetic statement shows the contents of the variables before the statement executes. Initially the contents of the variables after execution are hidden; but you can display them by clicking with the mouse.</li><br>
+
+	  <li>Before you display the contents of the variables, try to figure out what they are going to be. If you get the wrong answer, make sure you understand why the statement produces the answer shown.</li></ul>
+	 <p align="center"><a href="Resources/ppz/TC-Commands2.htm"><img src="Resources/pics/i-Animation.gif" width="62" height="62" border="0" alt="Click to view the animation"></a></p>
+	 
+	 <!-- ============ FOOTER SECTION ============== -->
+<div id ="myfooter" class="footer">
+ <h3 align="center">Copyright Notice</h3>
+    <P align="center">These COBOL course materials are the copyright property of Michael Coughlan.</P>
+    <P align="left"><FONT size="2">All rights reserved. No part of these course materials may be reproduced in any form or by any means - graphic, electronic, mechanical, photocopying, printing, recording, taping or stored in an information storage and retrieval system                - without the written permission of </FONT><FONT size="2">the author.</FONT></P>
+    <P align="center"><FONT size="2">(c) Michael Coughlan</FONT></P>
+     <hR align="left" width="100%">
+    <DIV align="left"><I><FONT size=-1>Last updated : March 1999</FONT></I> 
+     <BR>
+     <FONT size=-1><A href="mailto:michael.coughlan@ul.ie">e-mail : CSISwebeditor@ul.ie</A></FONT> </DIV>
+    </div>
+</div>
+</body>
+<html>
+
+		 
+
+	 
+
+ 
+
+     	
+	
+	
+	
+	 
+
+	 
+
+	
+	
+		
+

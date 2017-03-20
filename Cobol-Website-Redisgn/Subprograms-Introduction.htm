@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+    <META NAME="GENERATOR" CONTENT="Mozilla/4.0 [en] (WinNT; I) [Netscape]">
+	<TITLE>Contained and external sub-programs</TITLE>
+	<link href="COBOL2.CSS" rel="stylesheet" type="text/css" />
+</HEAD>
+<BODY>
+<div class="container">
+<header>
+	<h1><img src="Resources/pics/t-CobolTut.gif" width="173" height="59"></h1>
+</header>
+<!-- ============ NAVIGATION BAR SECTION ============== -->
+<div id="mynav" class="nav">
+<ul>
+  <li class="dropdown">
+    <a href="Introduction.html" class="dropbtn">COBOL Command</a>
+    <div class="dropdown-content">
+      <a href="Introduction.html">Introduction</a>
+      <a href="BasicUser.html">Basic User Input and Output</a>
+      <a href="MoveAssignment.html">Assignment using the MOVE verb</a>
+	  <a href="Arithmetic.html">Arithmetic in COBOL</a>
+    </div>
+  </li>
+  <li class="dropdown">
+    <a href="Subprograms-Introduction.htm" class="dropbtn">Sub Program</a>
+    <div class="dropdown-content">
+      <a href="Subprograms-Introduction.htm">Introduction</a>
+      <a href="The-CALL-verb.htm">The CALL verb</a>
+      <a href="Contained-Subprograms.htm">Contained Subprograms</a>
+    </div>
+  </li>
+ </ul>
+</div>
+
+<!-- ============ RIGHT COLUMN (CONTENT) ============== -->
+<div class="article">
+  <H2 align="CENTER">Introduction</h2>
+  <H4>Aims</H4>
+   <ul>
+	<li>To provide a brief introduction to building modular systems using separately compiled and/or contained subprograms.</li>
+	<li>To explore the syntax, semantics, and use of the CALL verb.</li>
+	<li>To examine how "state memory" is implemented in COBOL and to demonstrate the effects of the IS INITIAL clause and the CANCEL command.</li>
+	<li>To examine how contained subprograms are implemented and to show how the IS GLOBAL clause may be used to implement a form of "Information Hiding".</li>
+	<li>To show how the IS EXTERNAL clause may be used to set up an area of storage that may be accessed by any program in the run-unit.</li>
+	<li>To introduce Structured Design and to summarize its criteria for achieving good quality subprograms.</li>
+  </ul>
+	<H4>Objectives</H4>
+	<p>By the end of this unit you should - </p>
+	<OL>
+      <LI>Understand the difference between a subprogram and a contained subprogram.</LI><br>
+      <LI>Be able to use the CALL verb to transfer control to a subprogram and to pass parameter values to it.<BR>
+			<BR></LI>
+      <LI>Understand the difference between the BY REFERENCE and BY CONTENT parameter passing mechanisms.<BR>
+			<BR></LI>
+      <LI>Understand what "state memory" is and be able to create subprograms that do, or do not, exhibit "state memory".<BR>
+			<BR></LI>
+      <LI>Understand the IS COMMON, IS GLOBAL and IS EXTERNAL clauses.<BR>
+			<BR></LI>
+	  <LI>Be able to create subprograms of good quality.<BR>
+		<BR></LI>
+
+    </OL>
+	<H4><FONT color="#800000" face="Arial, Helvetica, sans-serif">Prerequisites</FONT></H4>
+	<UL>
+	<li>Introduction to COBOL <BR>
+    <li>Declaring data in COBOL<BR>
+    <li>Basic Procedure Division commands <BR>
+    <li>Selection in COBOL<BR>
+    <li>Iteration in COBOL <BR>
+    <li>Introduction to Sequential files<BR>
+    <li>Processing Sequential files<BR>
+    <li>Reading Sequential Files <BR>
+    <li>Edited Pictures <BR>
+    <li>The USAGE clause<BR>
+    <li>COBOL print files and variable-length records<BR>
+    <li>Sorting and Merging<BR>
+    <li>Introduction to direct access files<BR>
+    <li>Relative Files<BR>
+    <li>Indexed Files <BR>
+    <li>Using tables<BR>
+    <li>Creating tables - syntax and semantics<BR>
+    <li>Searching tables<BR>
+	</li>
+	</UL>
+</div>
+	<DIV align="center">
+	<P><A href="#top"> <IMG src="Resources/pics/i-pagetop.gif" width="132" height="38" border="0"></A></P>
+	</DIV>
+ <!-- ============ FOOTER SECTION ============== -->
+<div id ="myfooter" class="footer">
+ <h3 align="center">Copyright Notice</h3>
+    <P align="center">These COBOL course materials are the copyright property of Michael Coughlan.</P>
+    <P align="left"><FONT size="2">All rights reserved. No part of these course materials may be reproduced in any form or by any means - graphic, electronic, mechanical, photocopying, printing, recording, taping or stored in an information storage and retrieval system                - without the written permission of </FONT><FONT size="2">the author.</FONT></P>
+    <P align="center"><FONT size="2">(c) Michael Coughlan</FONT></P>
+     <hR align="left" width="100%">
+    <DIV align="left"><I><FONT size=-1>Last updated : March 1999</FONT></I> 
+     <BR>
+     <FONT size=-1><A href="mailto:michael.coughlan@ul.ie">e-mail : CSISwebeditor@ul.ie</A></FONT> </DIV>
+    </div>
+</div>
+</body>
+<html>

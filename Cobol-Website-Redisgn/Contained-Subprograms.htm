@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+    <META NAME="GENERATOR" CONTENT="Mozilla/4.0 [en] (WinNT; I) [Netscape]">
+	<TITLE>Contained and external sub-programs</TITLE>
+	<link href="COBOL2.CSS" rel="stylesheet" type="text/css" />
+</HEAD>
+<BODY>
+<div class="container">
+<header>
+	<h1><img src="Resources/pics/t-CobolTut.gif" width="173" height="59"></h1>
+</header>
+<!-- ============ NAVIGATION BAR SECTION ============== -->
+<div id="mynav" class="nav">
+<ul>
+  <li class="dropdown">
+    <a href="Introduction.html" class="dropbtn">COBOL Command</a>
+    <div class="dropdown-content">
+      <a href="Introduction.html">Introduction</a>
+      <a href="BasicUser.html">Basic User Input and Output</a>
+      <a href="MoveAssignment.html">Assignment using the MOVE verb</a>
+	  <a href="Arithmetic.html">Arithmetic in COBOL</a>
+    </div>
+  </li>
+  <li class="dropdown">
+    <a href="Subprograms-Introduction.htm" class="dropbtn">Sub Program</a>
+    <div class="dropdown-content">
+      <a href="Subprograms-Introduction.htm">Introduction</a>
+      <a href="The-CALL-verb.htm">The CALL verb</a>
+      <a href="Contained-Subprograms.htm">Contained Subprograms</a>
+    </div>
+  </li>
+ </ul>
+</div>
+
+<!-- ============ RIGHT COLUMN (CONTENT) ============== -->
+
+<div class="article">
+<a name="Contained Subprograms"></a>
+	<H2 align="CENTER">Contained Subprograms</h2>
+	<H2>Introduction</H2>
+	<P>COBOL subprograms can be independently compiled separate programs (linked into a single executable run-unit) or they can be contained within the text of a containing program.</P>
+	<P>Contained subprograms. are very similar to the procedures (or user defined functions) found in other languages except that they are invoked with the CALL verb and are better protected against accidental data corruption.</P>
+	<OL>
+		<LI>In the procedures used in other languages all external data-items are visible within the procedure unless they are explicitly redeclared as local data-items.<BR>
+		<BR></LI>
+		<LI>In COBOL's contained subprograms, no external data-items are visible within the contained subprogram, unless this has been explicitly permitted by using the IS GLOBAL clause in the data declaration. <BR>
+		<BR></LI>
+	</OL>
+	<H4>Defining a contained subprogram</H4>
+	<P>When contained subprograms are used, the end of the main program, and each subprogram, is signalled by means of the END PROGRAM statement. This has the format:<P>
+	<DIV align="center">
+		<P><B>END PROGRAM ProgramIdName.</B></p>
+	</DIV>
+	<P><B>Contained subprogram restrictions</B></P>
+	<P>Contained subprograms have the following restrictions:</P>
+	<OL>
+		<LI>Although contained subprograms can be nested, a contained subprogram can only be called by the immediate containing program or by a subprogram at the same level.<BR>
+		<BR></LI>
+		<LI>Contained subprograms. can only call a subprogram at the same level if the called program uses the IS COMMON PROGRAM clause in its PROGRAM-ID.<BR>
+		<BR></LI>
+	</OL>
+	<H4>>The IS GLOBAL clause</H4>
+	<P>As noted above, data-items declared outside the scope of a contained subprogram cannot be seen within the subprogram.</P>
+	<P>Sometimes however, you may want to share some data-item within a number of contained subprograms.</P>
+	<P>For instance, in the example program fragments below, we want both of our subprograms to be able to access the <I>NameTable</I>.</P>
+	<P>When we want a data-item to be seen within contained subprograms we simply follow the item declaration with the IS GLOBAL clause.</P>
+	<P>The IS GLOBAL clause specifies that the data item is to be visible within any subordinate contained subprograms.</P>
+	<TABLE width="383" border="1" align="center" background="Resources%5Cpics%5Ccode.gif" cellpadding="5">
+              <TR> 
+                <TD width="0" height="472"> 
+                  <PRE>      <B>$SET SOURCEFORMAT&quot;FREE&quot;<BR>      $SET NESTCALL<BR>IDENTIFICATION DIVISION.<BR>PROGRAM-ID. ContainerProgram.
+   ? ? ? ? ? ? ? ? ?<BR><FONT color="#FF0000">01 NameTable IS GLOBAL.
+	<FONT size="-1">   02 SName OCCURS 200 TIMES PIC X(20).</FONT></FONT><FONT size="-1">
+   </FONT>? ? ? ? ? ? ? ? ? <BR>PROCEDURE DIVISION.
+   ? ? ? ? ? ? ? ? ?
+   CALL &quot;PutToTable&quot; USING ???
+   ? ? ? ? ? ? ? ? ?
+   CALL &quot;ReportFromTable&quot;
+   ? ? ? ? ? ? ? ? ? <BR>   EXIT PROGRAM.
+	<BR><FONT color="#0000CC">IDENTIFICATION DIVISION.<BR>PROGRAM-ID. PutToTable.<BR>   ? ? ? ? ? ? ? ? ?</FONT><FONT color="#0000FF">
+  <FONT color="#FF0000"> MOVE StudName TO SName(SNum).</FONT><BR><FONT color="#0000CC">   ? ? ? ? ? ? ? ? ? 
+   EXIT PROGRAM<BR>END-PROGRAM PutToTable.</FONT></FONT>
+
+	<FONT color="#0000CC">IDENTIFICATION DIVISION.<BR>PROGRAM-ID. ReportFromTable.<BR>   ? ? ? ? ? ? ? ? ?</FONT><FONT color="#0000FF">
+   <FONT color="#FF0000">DISPLAY &quot;Student &quot; SNum &quot; = &quot; SName(SNum).</FONT><BR><FONT color="#0000CC">   ? ? ? ? ? ? ? ? ? 
+   EXIT PROGRAM<BR>END-PROGRAM ReportFromTable.</FONT></FONT><BR>END-PROGRAM ContainerProgram.</B></PRE>
+                </TD>
+              </TR>
+  </TABLE>
+	<H4>Information Hiding using the IS GLOBAL clause and contained subprograms</H4>
+	<P>Contained subprograms. seem to offer us the opportunity to create some form of Information Hiding. For instance, it looks as though we could create an Informational Strength module as defined by Myres (Myres, G.J. Composite/Structured Design. 1979) by hiding a table declaration within a containing program and then allowing access to it through the contained subprograms. (see diagram below).</P>
+	<p align="center"><IMG src="Resources/pics/call6.gif" width="401" height="206"></p>
+	<P>Unfortunately, this arrangement is not allowed in COBOL because, although subprograms. may be nested, a contained subprogram can only be called by the immediate containing program or by a subprogram at the same level. So in the diagram above, the main program would not be allowed direct access to the contained subprograms.</P>
+	<P>The only way any kind of Informational Strength module can be achieved is for the MainProgram to call the ContainerProgram and for the ContainerProgram to call the appropriate subprogram as shown below.</P>
+	<P>To do this the MainProgram would have to pass some sort of code to the ContainerProgram to tell it which of the subprograms to use and the parameter list passed to the ContainerProgram would have to be wide enough to accommodate the needs of the contained subprograms. This does not cause much of a problem in the example below, but in a case where the contained programs had more significant data needs it could prove a serious drawback.</P>
+	<P>Glenford Myres (Myres, G.J. Composite/Structured Design. 1979) has produced criteria for deciding whether a module (i.e. a subprogram) is good or bad. Module Coupling (i.e. the data connections between modules) is one of the criteria he considers. According to his criteria the ContainerProgram below exhibits both Stamp and Control coupling.</P>
+	<p align="center"><IMG src="Resources/pics/call7.gif" width="406" height="286"></p>
+	<H4>The IS COMMON PROGRAM clause</H4>
+	<P>A programmer pondering the problem outlined above - how to get an external program to make direct calls to the subprograms contained within a container might be excited to come across the IS COMMON PROGRAM clause. He might be forgiven for thinking for a moment that this clause was the solution to his problem. Sadly this is not the case.</P>
+	<P>The <b>only use</b> of the IS COMMON PROGRAM clause is to allow a subprogram to call one of its sibling subprograms. (i.e. a subprogram at the same level).</P>
+	<P>Contained subprograms can only call a subprogram at the same level if the called program uses the IS COMMON PROGRAM phrase in its PROGRAM-ID. For instance in the example below <I>DisplayData</I> is called by the main program and by its sibling <I>InsertData</I> but <I>InsertData</I> cannot call <I>DisplayData</I>.
+	<P>The syntax diagram for the IS INITIAL and IS COMMON clauses is shown below. As you can see from the diagram both the COMMON and INITIAL clauses may be used in combination. The words IS and PROGRAM are noise words which may be omitted.</P>
+	<P align="center"><IMG src="Resources/pics/call8.gif" width="495" height="23"> </P>
+	<H4>Example program using contained subprograms and the IS COMMON PROGRAM and IS GLOBAL clauses</H4>
+	<P>In this example, <I>SharedItem</I> can be accessed in the main program and in each of the subprograms because this has been explicitly specified in the data declaration by using the IS GLOBAL clause.</P>
+	<P>Note that "$ SET NESTCALL" is a compiler directive for Microfocus NetExpress telling the compiler to expect contained subprograms. It is not standard COBOL.</P>
+	<TABLE width="374" border="1" align="center" background="Resources%5Cpics%5Ccode.gif" cellpadding="5">
+              <TR> 
+                <TD width="0" height="472" valign="top"> 
+                  <PRE>      <B>$SET SOURCEFORMAT&quot;FREE&quot;<BR>      $SET NESTCALL<BR>IDENTIFICATION DIVISION.<BR>PROGRAM-ID. MainProgram.<BR>DATA DIVISION.<BR>WORKING-STORAGE SECTION.<BR>01 SharedItem     PIC X(25) IS GLOBAL.<BR>PROCEDURE DIVISION.
+	Begin.<BR>    CALL &quot;InsertData&quot;<BR>    MOVE &quot;Main can also use the share&quot; TO SharedItem<BR>    CALL &quot;DisplayData&quot;<BR>    STOP RUN.
+	<FONT color="#000099"><BR>IDENTIFICATION DIVISION.<BR>PROGRAM-ID. InsertData.<BR>PROCEDURE DIVISION.
+	Begin.<BR>    MOVE &quot;Shared area works&quot; TO SharedItem<BR>    CALL &quot;DisplayData&quot;<BR>    EXIT PROGRAM.<BR>END PROGRAM InsertData.</FONT>
+	<BR><FONT color="#000099">IDENTIFICATION DIVISION.<BR>PROGRAM-ID. DisplayData IS COMMON PROGRAM.<BR>PROCEDURE DIVISION.
+	Begin.<BR>    DISPLAY SharedItem.<BR>    EXIT PROGRAM<BR>END PROGRAM DisplayData.</FONT>
+	<BR>END PROGRAM MainProgram.<BR></B></PRE>
+                </TD>
+              </TR>
+  </TABLE>
+	<H4>Example program using the IS INITIAL and IS COMMON clauses and the CANCEL coomand.</H4>
+	<P>In the example below the "Fickle" and "Steadfast" subprograms are revisited. This time they have been incorporated into the text of a main, containing program.</P>
+	<P>The first part of the main program calls "Fickle" and "Steadfast" to demonstrate the difference between a program that has state memory and one that does not.</P>
+	<P>In the second part of the main program, "Fickle" is used with the CANCEL command to calculate the square of a number by repeated addition. After the square of a particular number has been calculated the CANCEL command is used to initialize "Fickle" so that the next number may be computed.</P>
+	<TABLE width="374" border="1" align="center" background="Resources%5Cpics%5Ccode.gif" cellpadding="5">
+              <TR> 
+                <TD width="0" height="472" valign="top"> 
+                  <PRE><B>      $SET SOURCEFORMAT&quot;FREE&quot;<BR>      $SET NESTCALL<BR>IDENTIFICATION DIVISION.<BR>PROGRAM-ID. Counter.<BR>DATA DIVISION.<BR>WORKING-STORAGE SECTION.<BR>01 Increment      PIC 99 VALUE ZERO.<BR>   88 EndOfData VALUE ZERO.<BR>PROCEDURE DIVISION.<BR>Begin.<BR>* Demonstrates the difference between Fickle<BR>* and Steadfast.  Entering a 0 ends the iteration<BR>  DISPLAY &quot;Enter value - &quot; WITH NO ADVANCING.<BR>  ACCEPT Increment.<BR>  PERFORM UNTIL EndOfData<BR>     CALL &quot;Fickle&quot;    USING BY CONTENT Increment<BR>     CALL &quot;Steadfast&quot; USING BY CONTENT Increment<BR>     DISPLAY &quot;Enter value - &quot; WITH NO ADVANCING<BR>     ACCEPT Increment<BR>  END-PERFORM.
+	<BR>* Shows how CANCEL may be used to initialise<BR>* Fickle periodically.  Fickle is used to get the<BR>* square of a number by repeated addition.<BR>  DISPLAY &quot;Enter the value to be squared&quot;<BR>  DISPLAY &quot;Value - &quot; WITH NO ADVANCING.<BR>  ACCEPT Increment.<BR>  PERFORM UNTIL EndOfData<BR>     CANCEL &quot;Fickle&quot;<BR>     PERFORM Increment TIMES<BR>       CALL &quot;Fickle&quot; USING BY CONTENT Increment<BR>     END-PERFORM<BR>     DISPLAY &quot;Value - &quot; WITH NO ADVANCING<BR>     ACCEPT Increment<BR>  END-PERFORM.<BR>  STOP RUN.
+
+	<BR><FONT color="#000099">IDENTIFICATION DIVISION.<BR>PROGRAM-ID. Fickle.<BR>DATA DIVISION.<BR>WORKING-STORAGE SECTION.<BR>01 RunningTotal   PIC 9(5) VALUE ZERO.<BR>LINKAGE SECTION.<BR>01 ParamValue     PIC 99.<BR>PROCEDURE DIVISION USING ParamValue.<BR>Begin.<BR>  ADD ParamValue TO RunningTotal.<BR>  DISPLAY &quot;Fickle total    = &quot; WITH NO ADVANCING<BR>  CALL &quot;DisplayTotal&quot; USING BY CONTENT RunningTotal<BR>  EXIT PROGRAM.<BR>END PROGRAM Fickle.</FONT>
+
+	<FONT color="#0000CC"><BR>IDENTIFICATION DIVISION.<BR>PROGRAM-ID. Steadfast IS INITIAL.<BR>DATA DIVISION.<BR>WORKING-STORAGE SECTION.<BR>01 RunningTotal PIC 9(5) VALUE ZERO.<BR>LINKAGE SECTION.<BR>01 ParamValue PIC 99.<BR>PROCEDURE DIVISION USING ParamValue.<BR>Begin.<BR>  ADD ParamValue TO RunningTotal.<BR>  DISPLAY &quot;Steadfast total = &quot; WITH NO ADVANCING<BR>  CALL &quot;DisplayTotal&quot; USING BY CONTENT RunningTotal<BR>  EXIT PROGRAM.<BR>END PROGRAM Steadfast.
+	</FONT>
+	<FONT color="#000099"><BR>IDENTIFICATION DIVISION.<BR>PROGRAM-ID. DisplayTotal IS COMMON INITIAL PROGRAM.<BR>DATA DIVISION.<BR>WORKING-STORAGE SECTION.<BR>01 PrnTotal  PIC ZZ,ZZ9.<BR>LINKAGE SECTION.<BR>01 Total     PIC 9(5).<BR>PROCEDURE DIVISION USING Total.<BR>Begin.<BR>  MOVE Total TO PrnTotal.<BR>  DISPLAY PrnTotal.<BR>  EXIT PROGRAM.<BR>END PROGRAM DisplayTotal.</FONT><BR>END PROGRAM Counter.</B></PRE>
+                </TD>
+              </TR>
+              <TR> 
+                <TD width="0" height="505" valign="top" bgcolor="#FFFFFF"> 
+                  <DIV align="center"> 
+                    <H3><B>Example Run</B></H3>
+                    <P><FONT size="-1">Numeric values entered by the user are 
+                      shown in <FONT color="#0000FF">blue </FONT>and values output 
+                      by the computer are shown in <FONT color="#FF0000">red</FONT>.</FONT></P>
+                  </DIV>
+                  <BLOCKQUOTE> 
+                    <PRE align="left"><B><FONT color="#000000">Enter value -</FONT> <FONT color="#0000FF">13</FONT>
+	<FONT color="#000000">Fickle total    = </FONT><FONT color="#FF0000">13</FONT>
+	<FONT color="#000000">Steadfast total =</FONT><FONT color="#FF0000"> 13</FONT>
+	Enter value - <FONT color="#0000FF">3</FONT>
+	<FONT color="#000000">Fickle total    = </FONT><FONT color="#FF0000">16
+	<FONT color="#000000">Steadfast total = </FONT> 3</FONT>
+	Enter value - <FONT color="#0000FF">13</FONT>
+	<FONT color="#000000">Fickle total    = </FONT><FONT color="#FF0000">29
+	<FONT color="#000000">Steadfast total =</FONT> 13</FONT>
+	Enter value - <FONT color="#0000FF">0
+                       
+	</FONT>Enter the value to be squared
+	Value - <FONT color="#0000FF">8</FONT>
+	<FONT color="#000000">Fickle total =  </FONT><FONT color="#FF0000">8
+	<FONT color="#000000">Fickle total = </FONT>16
+	<FONT color="#000000">Fickle total = </FONT>24
+	<FONT color="#000000">Fickle total = </FONT>32
+	<FONT color="#000000">Fickle total = </FONT>40
+	<FONT color="#000000">Fickle total = </FONT>48
+	<FONT color="#000000">Fickle total = </FONT>56
+	<FONT color="#000000">Fickle total =</FONT> 64</FONT>
+                       
+	Value - <FONT color="#0000FF">3</FONT>
+	<FONT color="#000000">Fickle total = </FONT><FONT color="#FF0000"> 3
+	<FONT color="#000000">Fickle total =</FONT>  6
+	<FONT color="#000000">Fickle total = </FONT> 9</FONT>
+	Value - <FONT color="#0000FF">0</FONT></B></PRE>
+                  </BLOCKQUOTE>
+                </TD>
+              </TR>
+  </TABLE>
+	<H4>Example program using the IS INITIAL and IS COMMON clauses and the CANCEL coomand.</H4>
+	<P>The IS GLOBAL clause allows a program and its contained subprograms to share access to a data-item.</P>
+	<P>The IS EXTERNAL clause does the same for any subprogram in a run-unit (i.e. any linked subprogram). But while the data-item that uses IS GLOBAL phrase only has to be declared in one place, each of the subprograms that wish to gain access to an EXTERNAL shared item must declare the item in exactly the same way.</P>
+	<P>The animation below shows how the IS EXTERNAL clause works.</P>
+	<P>In this animation there are four programs in the run-unit. Program B and Program D wish to communicate using a shared data. In COBOL they can do this by using the IS EXTERNAL clause to set up a shared area of memory but both both programs must contain the declarations below. These set up, and allow access to, the shared area.</P>
+	<PRE>Example:
+     WORKING-STORAGE SECTION.
+     01 SharedRec IS EXTERNAL.
+        02 PartA     PIC X(4).
+        02 PartB     PIC 9(5).
+  </PRE>
+	<p align="center">SharedRecord<BR>
+              Program<BR>
+              <A href="Resources/ppz/TC-Call.htm"><IMG src="Resources/pics/i-Animation.gif" width="62" height="62" align="middle" border="0"></A> 
+  </p>
+	<P>The kind of hidden data communication between subprograms that is supported by the IS EXTERNAL clause is generally regarded as very poor practice. Myres (Myres, G.J. <I>Composite/Structured Design. 1979</I>), for instance, indicates that this "Common Coupling" is nearly the worst kind of module coupling possible.
+	<H4>Designing a modular system</H4>
+	<P>Anyone who considers creating a system that consists of subprograms and contained subprograms should not embark on such an undertaking without an sound understanding how such a system is designed and what makes a good subprogram and what does not.</P>
+	<P>This kind of system design is called a modular design and the subprograms are called modules. There are a number of different methods/approaches to designing a modular system but Structured Design is probably the most successful.</P>
+	<P>It is beyond the scope of this course to provide instruction in Structured Design but programmers tasked with creating a modular system should read these two texts.</p>
+	<P>Page-Jones, Meilir, <I>Practical guide to Structured Systems Design - Second Edition</I>,Prentice-Hall 1988.</p>
+	<P>Myers, Glenford, <I>Composite/Structured Design,</I> Von Nostrand Reinhold 19</P>
+	<H4>Criteria for module goodness</H4>
+	<P>Although this course cannot provide instruction in Structured Design we can observe that the criteria for module goodness specified in that approach boils down to three things:</P>
+	<UL>
+		<LI>A subprogram should perform a single specific function or should co-ordinate its subordinate subprograms such that they perform a single function.<BR>
+		<BR></LI>
+		<LI>A subprogram should only be given access to the data it actually requires to do its job. Even then, the type of access (Read-Only or Read-Write) allowed on the data should be restricted.<BR>
+		<BR></LI>
+		<LI>The data passed to and from the subprogram should be passed through the parameter list in as transparent a manner as possible - there should be no hidden method of data transfer.<BR>
+		<BR></LI>
+	</UL>
+	<DIV align="center">
+	<P><A href="#top"> <IMG src="Resources/pics/i-pagetop.gif" width="132" height="38" border="0"></A></P>
+	</DIV>
+</div>
+ <!-- ============ FOOTER SECTION ============== -->
+<div id ="myfooter" class="footer">
+ <h3 align="center">Copyright Notice</h3>
+    <P align="center">These COBOL course materials are the copyright property of Michael Coughlan.</P>
+    <P align="left"><FONT size="2">All rights reserved. No part of these course materials may be reproduced in any form or by any means - graphic, electronic, mechanical, photocopying, printing, recording, taping or stored in an information storage and retrieval system                - without the written permission of </FONT><FONT size="2">the author.</FONT></P>
+    <P align="center"><FONT size="2">(c) Michael Coughlan</FONT></P>
+     <hR align="left" width="100%">
+    <DIV align="left"><I><FONT size=-1>Last updated : March 1999</FONT></I> 
+     <BR>
+     <FONT size=-1><A href="mailto:michael.coughlan@ul.ie">e-mail : CSISwebeditor@ul.ie</A></FONT> </DIV>
+    </div>
+</div>
+</body>
+<html>

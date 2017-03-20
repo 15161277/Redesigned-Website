@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+    <META NAME="GENERATOR" CONTENT="Mozilla/4.0 [en] (WinNT; I) [Netscape]">
+	<TITLE>Contained and external sub-programs</TITLE>
+	<link href="COBOL2.CSS" rel="stylesheet" type="text/css" />
+</HEAD>
+<BODY>
+<div class="container">
+<header>
+	<h1><img src="Resources/pics/t-CobolTut.gif" width="173" height="59"></h1>
+</header>
+<!-- ============ NAVIGATION BAR SECTION ============== -->
+<div id="mynav" class="nav">
+<ul>
+  <li class="dropdown">
+    <a href="Introduction.html" class="dropbtn">COBOL Command</a>
+    <div class="dropdown-content">
+      <a href="Introduction.html">Introduction</a>
+      <a href="BasicUser.html">Basic User Input and Output</a>
+      <a href="MoveAssignment.html">Assignment using the MOVE verb</a>
+	  <a href="Arithmetic.html">Arithmetic in COBOL</a>
+    </div>
+  </li>
+  <li class="dropdown">
+    <a href="Subprograms-Introduction.htm" class="dropbtn">Sub Program</a>
+    <div class="dropdown-content">
+      <a href="Subprograms-Introduction.htm">Introduction</a>
+      <a href="The-CALL-verb.htm">The CALL verb</a>
+      <a href="Contained-Subprograms.htm">Contained Subprograms</a>
+    </div>
+  </li>
+ </ul>
+</div>
+
+<!-- ============ (CONTENT) ============== -->
+<div class="article">
+	<H2 align="CENTER">The CALL verb</h2>
+	<H4>Introduction</H4>
+	<p>A large software system is not usually written as a single monolithic program. Instead, it consists of a main program and many independently compiled subprograms, linked together to form one executable run-unit.</p>
+	<p>A subprogram is the name we give to a program that is invoked from another program.</p>
+	<p>The object code of separately compiled subprograms has to be linked together into one executable run-unit by a special program called a "Linker".</p>
+	<p>One purpose of the Linker is to resolve the subprogram names (given in the PROGRAM-ID clause) into actual physical addresses so that the computer can find a particular subprogram when it is invoked.</p>
+	<p>In a system consisting of a main program and linked subprograms, there must be a mechanism that allows one program to invoke another and to pass data to it. In many programming languages, the procedure or function call serves this purpose.</p>
+	<p>In COBOL, the CALL verb is used to invoke one program from another.</p>
+	<H4>CALL verb semantics</H4>
+	<p>The CALL verb transfers control to a subprogram. When the subprogram has finished, control returns to the statement that follows the CALL in the calling program.</p>
+	<p>The called program may be an independently compiled program, or it may be contained within the text of the calling program (i.e. it may be a contained subprogram).</p>
+	<H4>CALL syntax and notes</H4>
+	<BR>
+	<BR>
+	<BR>
+	<P align="center"><IMG src="Resources/pics/i-BugAlert.gif" width="56" height="62"></P>
+  <P align="center"><FONT size="-1">Passing parameters of incorrect 
+     types to a called program is a frequent source of program failure 
+     (crashes).<BR>
+  </FONT><FONT size="-1">Always double check to make sure that the 
+     types of the parameters passed by the caller program are in agreement 
+     with those declared in the LINKAGE SECTION of the called program.</FONT></P>
+	<BR>
+	<BR>
+	<BR>
+	<P align="center"><IMG src="Resources/pics/Call1.gif" width="480" height="208"></P>
+	<P><B>CALL notes</B></P>
+	<OL>
+		<LI>If the CALL passes parameters, then the called program must have a USING phrase after the PROCEDURE DIVISION header and a LINKAGE SECTION to describe the parameters passed.<BR>
+		<BR></LI>
+		<LI>The CALL statement has a USING phrase only if a USING phrase is used in the PROCEDURE DIVISION header of the called program.<BR>
+		<BR></LI>
+		<LI>Both USING phrases must have the same number of parameters.<BR>
+		<BR></LI>
+		<LI>Unlike languages like Modula-2, COBOL does not check the type of the parameters passed to a called program. It is the programmer's responsibility to make sure that only parameters of the correct type and size are passed.<BR>
+		<BR></LI>
+		<LI>Parameters passed from the calling program to the called program correspond by position, not by name. That is, the first parameter in the USING phrase of the CALL corresponds to the first in the USING phase of the called program, and so on.<BR>
+		<BR>
+		<IMG src="Resources/pics/Call2.gif" width="524" height="354"><BR>
+		<BR>
+		<BR>
+		</LI>
+		<LI>If the program being called has not been linked (does not exist in the executable image,) the statement block following the ON EXCEPTION/OVERFLOW will execute. Otherwise, the program will terminate abnormally.<BR>
+		<BR></LI>
+		<LI>BY REFERENCE is the default passing mechanism, and so is sometimes omitted.<BR>
+		<BR></LI>
+		<LI>Note that vendors often extend the CALL by introducing BY VALUE parameter passing, and by including a GIVING phrase. These are non-standard extensions.<BR>
+		<BR></LI>
+	</OL>
+	<H4>Parameter passing mechanisms</H4>
+	<P>In standard COBOL, the CALL verb has two parameter passing mechanisms - BY REFERENCE and BY CONTENT.</P>
+	<UL>
+		<LI>BY REFERENCE is used when the called program needs to pass data back to the caller.<BR>
+		<BR></LI>
+		<LI>BY CONTENT is used when data needs to be passed to, but not received from, the called program.<BR>
+		<BR></LI>
+	</UL>
+	<P>The diagrams and explanations below show how these mechanisms work.</P>
+	<H4>CALL..BY REFERENCE</H4>
+	<P>When data is passed BY REFERENCE, the address of the data-item is supplied to the called subprogram. So any changes made to the data-item in the subprogram are also made to the data-item in the main program because both items refer to the same memory location.</P>
+	<P align="center"><IMG src="Resources/pics/call3.gif" width="490" height="164"></P>
+	<H4>CALL..BY CONTENT</H4>
+	<P>When a parameter is passed BY CONTENT a copy of the data-item is made and the address of the copy is supplied to subprogram. Any changes made to the data-item in the subprogram affect only the copy.</P>
+	<P align="center"><IMG src="Resources/pics/call4.gif" width="489" height="193"></P>
+	<H4>CALL example</H4>
+	<P>The example fragments below show how a CALL statement is made in a calling program to invoke and pass parameters to a subprogram (shown in outline).</P>
+	<TR> 
+		<TD valign="TOP" align="LEFT" width="175" bgcolor="#FFFFCC" height="1262"> 
+      <P><FONT face="Arial, Helvetica, sans-serif" color="#800000"><B>CALL 
+         example</B></FONT></P>
+      <P>&nbsp;</P>
+    </TD>
+    <TD width="525" valign="top" height="1262"> 
+      <P>The example fragments below show how a <FONT size="-1">CALL</FONT> 
+         statement is made in a calling program to invoke and pass parameters 
+         to a subprogram (shown in outline).</P>
+      <P>&nbsp;</P>
+      <TABLE width="399" border="1" align="center" background="Resources%5Cpics%5Ccode.gif" cellpadding="5">
+        <TR> 
+					<TD> 
+            <PRE><B>CALL &quot;DateValidate&quot;<BR>     USING BY CONTENT TempDate<BR>     USING BY REFERENCE DateCheckResult.<BR></B></PRE>
+          </TD>
+        </TR>
+			</TABLE>
+			<BR>
+      <DIV align="center">The <FONT size="-1">CALL</FONT> statement in the 
+					 calling program.<BR>
+      </DIV>
+      <P>&nbsp;</P>
+			<TABLE width="374" border="1" align="center" background="Resources%5Cpics%5Ccode.gif" cellpadding="5">
+        <TR> 
+          <TD> 
+            <PRE><B><BR>IDENTIFICATION DIVISION.<BR>PROGRAM-ID DateValidate IS INITIAL.<BR>DATA DIVISION.<BR>WORKING-STORAGE SECTION.<BR>          ? ? ? ? ? ? ? ? ? ? ? ? <BR>LINKAGE SECTION.<BR>01  DateParam            PIC X(8).<BR>01  DateResult           PIC 9.<BR>PROCEDURE DIVISION USING DateParam, DateResult.<BR>Begin. <BR>       ? ? ? ? ? ? ? ? ? ? ? ? <BR>       ? ? ? ? ? ? ? ? ? ? ? ?<BR>       EXIT PROGRAM.<BR>??????.<BR>       ? ? ? ? ? ? ? ? ? ? ? ?<BR><BR></B></PRE>
+          </TD>
+        </TR>
+      </TABLE>
+		</TD>
+	</TR>
+	<DIV align = "center">
+		<P>Outline of the called program</P>
+	</DIV>
+	<P><B>Notes</B></P>
+	<P>Note that the name given in the CALL statement (i.e. "DateValidate") corresponds with the name given in the PROGRAM-ID of the called program. The main purpose of the PROGRAM-ID clause is to identify programs within a run-unit (i.e. a set of programs that have been compiled and linked into one executable image) and the CALL transfers control from one program in the run-unit to another.</P>
+	<P>Note that the subprogram has a LINKAGE SECTION where the parameters passed to it are defined.</P>
+	<P>Note that the names of the parameters passed by the CALL statement in the main program are different from those in the called subprogram. This is because it is the positions of the parameters following their respective USING clauses that is significant, not the names used.</P>
+	<P>In this case <I>TempDate</I> corresponds to <I>DateParam</I> and <I>DateCheckResult</I> to <I>DateResult</I>.</P>
+	<BLOCKQUOTE>
+	<P><I>TempDate</I> is a parameter passed to the subprogram BY CONTENT. This means that no matter what the subprogram does to the value in the corresponding <I>DateParam</I>, the original value of <I>TempDate</I> will be unaffected.</P>
+	<P><I>By contrast, <I>DateCheckResult</I> is passed BY REFERENCE and this means that any changes to the value in the corresponding <I>DateResult</I> are reflected by a change in value of <I>DateCheckResult</I> in the main program.</P></I>
+	</BLOCKQUOTE>
+	<P>Passing parameters BY REFERENCE is the mechanism by which data is passed from a called subprogram to the main program. In this example, what is being passed back is a code indicating the success or failure of the validation.</P>
+	<P>BY REFERENCE should be used only when you require a subprogram to pass data back to the main program. It is a principle of modular design (i.e. a design where the system is broken into a number of subprograms. rather than consisting of a single monolithic program) that the data connection between modules should be as limited as possible.</P>
+	<H4>State memory and the IS INITIAL clause</H4>
+	<P><B>The IS INITIAL phase</B></P>
+	<P>The first time a subprogram is called, it is in its initial state: all files are closed and the data-items are initialized to their VALUE clauses.</P>
+	<P>The next time it is called, it remembers its state from the previous call. Any files that were opened are still open, and any data-items that were assigned values still contain those values.</P>
+	<P>Although it can be useful for a subprogram to remember its state from call to call, systems that contain subprograms. with "state memory" are often less reliable and more difficult to debug than those that do not.</P>
+	<P>A subprogram can be forced into its initial state each time it is called, by including the IS INITIAL clause in the PROGRAM-ID.</P>
+	<P>In the examples below, the subprogram "Steadfast" produces the same result every time it is called with the same parameter value. But "Fickle", because it remembers its state from the previous call, will produce different results when called with the same value.</P>
+	<P>&nbsp;</P>
+			<DIV align="center">
+              <TABLE width="412" border="1" background="Resources%5Cpics%5Ccode.gif" cellpadding="5">
+                <TR> 
+                  <TD width="0" height="322" valign="top"> 
+                    <PRE><B>
+? ? ? ? ? ? ? ? ? ? 
+MOVE 12 TO IncrementVal.
+CALL &quot;Steadfast&quot; USING BY CONTENT IncrementVal.<BR>
+MOVE 5 TO IncrementVal
+CALL &quot;Steadfast&quot; USING BY CONTENT IncrementVal.<BR>
+MOVE 12 TO IncrementVal.
+CALL &quot;Steadfast&quot; USING BY CONTENT IncrementVal.<BR>
+? ? ? ? ? ? ? ? ? ? 
+MOVE 12 TO IncrementVal.
+CALL &quot;Fickle&quot; USING BY CONTENT IncrementVal.<BR>
+MOVE 5 TO IncrementVal.
+CALL &quot;Fickle&quot; USING BY CONTENT IncrementVal.
+MOVE 12 TO IncrementVal.
+CALL &quot;Fickle&quot; USING BY CONTENT IncrementVal.
+? ? ? ? ? ? ? ? ? ? <BR></B></PRE>
+                </TD>
+              </TR>
+            </TABLE>
+           Statements in the calling program<BR>
+            </DIV>
+            <P><BR>
+            </P>
+            <P>&nbsp;</P>
+            <TABLE width="439" border="1" align="center" background="Resources%5Cpics%5Ccode.gif" cellpadding="5">
+              <TR> 
+                <TD height="318" valign="top"> 
+                  <PRE><B>      $SET SOURCEFORMAT&quot;FREE&quot;<BR>IDENTIFICATION DIVISION.<BR>PROGRAM-ID. Steadfast IS INITIAL.</B></PRE>
+                  <PRE><B>DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 RunningTotal PIC 9(5) VALUE 50.</B></PRE>
+                  <PRE><B>LINKAGE SECTION.
+01 ParamValue PIC 99.</B></PRE>
+                  <PRE><B>PROCEDURE DIVISION USING ParamValue.
+Begin.
+   ADD ParamValue TO RunningTotal.
+   DISPLAY &quot;Total = &quot;, RunningTotal.
+   EXIT PROGRAM.</B><B><BR></B></PRE>
+                </TD>
+                <TD valign="top" height="318" bgcolor="#FFFFFF"> 
+                  <DIV align="left"> 
+                    <DIV align="center"><B>Example Runs<BR>
+                      </B><FONT size="-1">The parameter </FONT><FONT size="-1"> 
+                      value is shown in <FONT color="#0000FF">blue</FONT> and 
+                      the result displayed is shown in <FONT color="#FF0000">red</FONT>. 
+                      <BR>
+                      </FONT></DIV>
+                    <HR>
+                    <DIV align="center"><FONT size="-2">First Run</FONT><BR>
+                    </DIV>
+                    <DIV align="center"><FONT color="#0000FF"><B><FONT face="Arial, Helvetica, sans-serif">12</FONT></B></FONT><B><FONT face="Arial, Helvetica, sans-serif"><BR>
+                      <FONT color="#FF0000">Total = 62</FONT></FONT></B> </DIV>
+                    <HR align="center">
+                    <DIV align="center"><FONT size="-2">Second Run</FONT><BR>
+                    </DIV>
+                    <DIV align="center"><FONT color="#0000FF"><B><FONT face="Arial, Helvetica, sans-serif">5</FONT></B></FONT><B><FONT face="Arial, Helvetica, sans-serif"><BR>
+                      <FONT color="#FF0000">Total = 55</FONT></FONT></B> </DIV>
+                    <HR align="center">
+                    <DIV align="center"><FONT size="-2">Third Run</FONT><BR>
+                    </DIV>
+                    <DIV align="center"><FONT color="#0000FF"><B><FONT face="Arial, Helvetica, sans-serif">12</FONT></B></FONT><B><FONT face="Arial, Helvetica, sans-serif"><BR>
+                      <FONT color="#FF0000">Total = 62</FONT></FONT></B> </DIV>
+                  </DIV>
+                </TD>
+              </TR>
+            </TABLE>
+            <P>&nbsp;</P>
+            <P>In &quot;Steadfast&quot;, no matter how many times we run the program, 
+              when the parameter value is the same - the result is the same. For 
+              instance, on the first and third runs of the program the parameter 
+              has the value 12 and each time the result is 62 (12+50).</P>
+            <P>&nbsp;</P>
+            <TABLE width="439" border="1" align="center" background="Resources%5Cpics%5Ccode.gif" cellpadding="5">
+              <TR> 
+                <TD height="330" valign="top"> 
+                  <PRE><B>      $SET SOURCEFORMAT&quot;FREE&quot;<BR>IDENTIFICATION DIVISION.<BR>PROGRAM-ID. Fickle.
+<BR>DATA DIVISION.<BR>WORKING-STORAGE SECTION.<BR>01 RunningTotal   PIC 9(5) VALUE 50.
+<BR>LINKAGE SECTION.<BR>01 ParamValue     PIC 99.
+<BR>PROCEDURE DIVISION USING ParamValue.<BR>Begin.<BR>   ADD ParamValue TO RunningTotal.<BR>   DISPLAY &quot;Total = &quot;, RunningTotal.<BR>   EXIT PROGRAM.</B><B><BR></B></PRE>
+                </TD>
+                <TD valign="top" height="330" bgcolor="#FFFFFF"> 
+                  <DIV align="left"> 
+                    <DIV align="center"><B>Example Runs<BR>
+                      </B><FONT size="-1">The parameter </FONT><FONT size="-1"> 
+                      value is shown in <FONT color="#0000FF">blue</FONT> and 
+                      the result displayed is shown in <FONT color="#FF0000">red</FONT>. 
+                      <BR>
+                      </FONT> </DIV>
+                    <HR>
+                    <DIV align="center"><FONT size="-2">First Run</FONT><BR>
+                      <FONT size="-1"> </FONT> </DIV>
+                    <DIV align="center"><FONT color="#0000FF"><B><FONT face="Arial, Helvetica, sans-serif">12</FONT></B></FONT><B><FONT face="Arial, Helvetica, sans-serif"><BR>
+                      <FONT color="#FF0000">Total = 62</FONT></FONT></B> </DIV>
+                    <HR align="center">
+                    <DIV align="center"><FONT size="-2">Second Run</FONT><BR>
+                    </DIV>
+                    <DIV align="center"> 
+                      <DIV><FONT color="#0000FF"><B><FONT face="Arial, Helvetica, sans-serif">5</FONT></B></FONT><B><FONT face="Arial, Helvetica, sans-serif"><BR>
+                        <FONT color="#FF0000">Total = 67</FONT></FONT></B> </DIV>
+                      <HR>
+                      <FONT size="-2">Third Run</FONT><BR>
+                      <DIV align="center"><FONT color="#0000FF"><B><FONT face="Arial, Helvetica, sans-serif">12</FONT></B></FONT><B><FONT face="Arial, Helvetica, sans-serif"><BR>
+                        <FONT color="#FF0000">Total = 79</FONT></FONT></B> </DIV>
+                    </DIV>
+                  </DIV>
+                </TD>
+              </TR>
+						</TABLE>
+	<P>In "Fickle" the result produced by running the program depends on what the program "remembers" from the last time it was run. In the example runs, even though the parameter value is the same on the first and third runs, the result produced is different. On the first run the result is 62 (12+50) but on the third run, even though the value of the parameter is still 12, the program "remembers" the value of RunningTotal from the previous run and produces a result of 79 (12+67).</P>
+	<H4>State memory and the CANCEL verb</H4>
+	<P>Sometimes a program only needs "state memory" part of the time. That is, it needs to be reset to its initial state periodically.</P>
+	<P>In COBOL this can be done by means of the CANCEL verb/command.</P>
+	<P>The syntax of the CANCEL verb is as follows</P>
+	<P align="center"><IMG src="Resources/pics/call5.gif" width="264" height="71"></P>
+	<P>When the CANCEL command is executed, the memory space occupied by the subprogram is freed and if the subprogram is called again it will be in its initial state (i.e. all files closed and the data-items initialized to their VALUE clauses).</P>
+	<P>By using the following statements in our main program</P>
+	<PRE><B>CALL &quot;Fickle&quot; USING BY CONTENT IncValue.
+		CANCEL &quot;Fickle&quot;
+		CALL &quot;Fickle&quot; USING BY CONTENT IncValue</B>.</PRE>
+	<P>we can force "Fickle" to act like "Steadfast".</P>
+	<H4>Subprogram clauses and verbs</H4>
+	<P>COBOL subprograms. are identical to standard COBOL programs with the following exceptions:</P>
+	<OL>
+		<LI>The PROGRAM-ID may take the IS INITIAL and IS COMMON PROGRAM clauses.<BR>
+		<BR></LI>
+		<LI>When parameters are passed to the subprogram, the PROCEDURE DIVISION header of the subprogram must have the USING phrase.<BR>
+		<BR></LI>
+		<LI>When there are parameters, the DATA DIVISION of the subprogram must have a LINKAGE SECTION where the items specified in the USING phrase are declared.<BR>
+		<BR></LI>
+		<LI>The EXIT PROGRAM statement is used where the STOP RUN would be used in a standard COBOL program. 
+		An EXIT PROGRAM statement has the effect of stopping the subprogram and returning control to the calling program. 
+		The difference between a STOP RUN and an EXIT PROGRAM statement is that the STOP RUN causes the whole run-unit to stop (even if it is encountered in a subprogram) instead of just the subprogram<BR>
+		<BR></LI>
+		<LI>Contained subprograms. must end with the END PROGRAM statement. The END PROGRAM statement delimits the scope of a contained subprogram<BR>
+		<BR></LI>
+	</OL>
+	<DIV align="center">
+	<P><A href="#top"> <IMG src="Resources/pics/i-pagetop.gif" width="132" height="38" border="0"></A></P>
+	</DIV>
+	</div>
+<!-- ============ FOOTER SECTION ============== -->
+<div id ="myfooter" class="footer">
+ <h3 align="center">Copyright Notice</h3>
+    <P align="center">These COBOL course materials are the copyright property of Michael Coughlan.</P>
+    <P align="left"><FONT size="2">All rights reserved. No part of these course materials may be reproduced in any form or by any means - graphic, electronic, mechanical, photocopying, printing, recording, taping or stored in an information storage and retrieval system                - without the written permission of </FONT><FONT size="2">the author.</FONT></P>
+    <P align="center"><FONT size="2">(c) Michael Coughlan</FONT></P>
+     <hR align="left" width="100%">
+    <DIV align="left"><I><FONT size=-1>Last updated : March 1999</FONT></I> 
+     <BR>
+     <FONT size=-1><A href="mailto:michael.coughlan@ul.ie">e-mail : CSISwebeditor@ul.ie</A></FONT> </DIV>
+    </div>
+</div>
+
+</body>
+<html>
